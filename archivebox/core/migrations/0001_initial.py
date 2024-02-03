@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Snapshot',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.UUIDAutoField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('url', models.URLField(unique=True)),
                 ('timestamp', models.CharField(default=None, max_length=32, null=True, unique=True)),
                 ('title', models.CharField(default=None, max_length=128, null=True)),

@@ -35,6 +35,29 @@ except AttributeError:
     import jsonfield
     JSONField = jsonfield.JSONField
 
+# fix: ValueError: Primary key 'django.db.models.UUIDField' referred by core.apps.CoreConfig.default_auto_field must subclass AutoField.
+# based on https://code.djangoproject.com/ticket/32577
+# also used in default_auto_field and DEFAULT_AUTO_FIELD
+
+class UUIDAutoField(models.fields.AutoField, models.fields.UUIDField):
+
+    def __init__(self, *args, **kwargs):
+        #kwargs['db_default'] = RandomUUID()
+        #kwargs['db_default'] = uuid.uuid4()
+        super().__init__(*args, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+        #del kwargs['db_default']
+        return name, path, args, kwargs
+
+    def get_internal_type(self):
+        return 'UUIDAutoField'
+
+    def rel_db_type(self, connection):
+        return UUIDField().db_type(connection=connection)
+
+models.UUIDAutoField = UUIDAutoField
 
 class Tag(models.Model):
     """
@@ -85,7 +108,7 @@ class Tag(models.Model):
 
 
 class Snapshot(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDAutoField(primary_key=True, default=uuid.uuid4, editable=False)
 
     url = models.URLField(unique=True, db_index=True)
     timestamp = models.CharField(max_length=32, unique=True, db_index=True)
@@ -268,7 +291,7 @@ class ArchiveResultManager(models.Manager):
 
 class ArchiveResult(models.Model):
     id = models.AutoField(primary_key=True, serialize=False, verbose_name='ID')
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    uuid = models.UUIDAutoField(default=uuid.uuid4, editable=False)
 
     snapshot = models.ForeignKey(Snapshot, on_delete=models.CASCADE)
     extractor = models.CharField(choices=EXTRACTORS, max_length=32)

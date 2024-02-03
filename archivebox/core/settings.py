@@ -270,7 +270,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # WIP: broken by Django 3.1.2 -> 4.0 migration
-DEFAULT_AUTO_FIELD = 'django.db.models.UUIDField'
+DEFAULT_AUTO_FIELD = 'django.db.models.UUIDAutoField'
 
 ################################################################################
 ### Shell Settings

@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='archiveresult',
             name='uuid',
-            field=models.UUIDField(default=uuid.uuid4, editable=False),
+            field=models.UUIDAutoField(default=uuid.uuid4, editable=False),
         ),
         migrations.AlterField(
             model_name='archiveresult',
