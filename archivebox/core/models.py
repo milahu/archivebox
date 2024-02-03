@@ -290,8 +290,9 @@ class ArchiveResultManager(models.Manager):
 
 
 class ArchiveResult(models.Model):
-    id = models.AutoField(primary_key=True, serialize=False, verbose_name='ID')
-    uuid = models.UUIDAutoField(default=uuid.uuid4, editable=False)
+    # fix: Model core.ArchiveResult can't have more than one auto-generated field.
+    #id = models.AutoField(primary_key=True, serialize=False, verbose_name='ID')
+    uuid = models.UUIDAutoField(primary_key=True, default=uuid.uuid4, editable=False)
 
     snapshot = models.ForeignKey(Snapshot, on_delete=models.CASCADE)
     extractor = models.CharField(choices=EXTRACTORS, max_length=32)
